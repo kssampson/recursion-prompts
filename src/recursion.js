@@ -6,35 +6,101 @@
 // denoted by n!, is the product of all positive integers less than or equal to n.
 // Example: 5! = 5 x 4 x 3 x 2 x 1 = 120
 // factorial(5); // 120
+
 let factorial = function(n) {
+  // if (n < 0) {
+  //   return null;
+  // }
+  // if (n <= 0) {
+  //   return 1;
+  // }
+  // return n * (factorial(n - 1));
+  return (n < 0) ? null : (n <= 0) ? 1 : n * factorial(n - 1);
 };
+
 
 // 2. Compute the sum of an array of integers.
 // sum([1,2,3,4,5,6]); // 21
 let sum = function(array) {
+  let total = 0;
+  if (!Array.isArray(array)) {
+    return total += array;
+  }
+  array.forEach(function(number) {
+    total += sum(number);
+  })
+  return total;
 };
 
 // 3. Sum all numbers in an array containing nested arrays.
 // arraySum([1,[2,3],[[4]],5]); // 15
 let arraySum = function(array) {
+  var total = 0;
+
+  if (!Array.isArray(array)) {
+    return total += array;
+  }
+
+  array.forEach(function(num) {
+    total += arraySum(num);
+  });
+  return total;
 };
 
 // 4. Check if a number is even.
 // isEven(2) // true
 // isEven(9) // false
 let isEven = function(n) {
+  var substractFromN = (2 * Math.floor((n / 2)));
+
+  if (n === 0) {
+    return true;
+  }
+  if (n === 1) {
+    return false;
+  }
+
+  return isEven(n - substractFromN);
+
+  // return n - (2 * Math.floor((n / 2))) === 0; // modulo formula
 };
 
 // 5. Sum all integers below a given integer.
 // sumBelow(10); // 45
 // sumBelow(7); // 21
 let sumBelow = function(n) {
+  let isPositive = true;
+  if (n < 0) {
+    isPositive = false;
+  }
+  n = Math.abs(n);
+
+  if (n <= 1) {
+    return 0;
+  }
+
+  if (!isPositive) {
+    return -Math.abs((n - 1) + sumBelow(n - 1));
+  } else {
+    return (n - 1) + sumBelow(n - 1);
+  }
 };
 
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
 let range = function(x, y) {
+  if (x > y) {
+    return range(y, x).reverse();
+  }
+  if (x === y) {
+    return [];
+  }
+  if ((y - x) === 1 || (x - y) === 1) {
+    return [];
+  }
+  return [x + 1].concat(range(x+1, y));
 };
+
 
 // 7. Compute the exponent of a number.
 // The exponent of a number says how many times the base number is used as a factor.
@@ -42,6 +108,22 @@ let range = function(x, y) {
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 let exponent = function(base, exp) {
+  if (exp === 0) {
+    return 1;
+  }
+  // recursive case: n is negative
+  if (exp < 0) {
+      return 1 / exponent(base, -exp);
+  }
+  // recursive case: n is odd
+  if (!isEven(exp)) {
+      return exponent(base, exp - 1) * base;
+  }
+  // recursive case: n is even
+  if (isEven(exp)) {
+      var y = exponent(base, exp /2);
+      return y * y;
+  }
 };
 
 // 8. Determine if a number is a power of two.
@@ -49,11 +131,29 @@ let exponent = function(base, exp) {
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
 let powerOfTwo = function(n) {
+  if (n === 1) {
+    return true;
+  }
+  if (n === 0) {
+    return false;
+  }
+  if (n > 1 && !isEven(n)) {
+    return false;
+  }
+  return powerOfTwo(n / 2);
 };
 
+
 // 9. Write a function that reverses a string.
-// reverse("hello"); // olleh 
+// reverse("hello"); // olleh
 let reverse = function(string) {
+  var reversedStr = '';
+  reversedStr += string[string.length - 1];
+  if (string.length === reversedStr.length) {
+    return reversedStr;
+  }
+  var shortened = string.slice(0, string.length-1)
+  return reversedStr += reverse(shortened);
 };
 
 // 10. Write a function that determines if a string is a palindrome.
@@ -61,7 +161,19 @@ let reverse = function(string) {
 // palindrome("rotor") // true
 // palindrome("wow") // true
 let palindrome = function(string) {
+  string = string.toLowerCase();
+  if (string.length === 0) {
+    return true;
+  }
+  var firstChar = string[0];
+  var lastChar = string[string.length-1];
+
+  if (firstChar === lastChar) {
+    return palindrome(string.slice(1, string.length-1));
+  }
+  return false;
 };
+
 
 // 11. Write a function that returns the remainder of x divided by y without using the
 // modulo (%) operator.
@@ -69,6 +181,10 @@ let palindrome = function(string) {
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 let modulo = function(x, y) {
+  // var dividend = x;
+  // var divisor = y;
+  // var quotient = Math.floor(x / y);
+  // var remainder = dividend - (quotient * divisor);
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
@@ -94,6 +210,10 @@ let gcd = function(x, y) {
 // compareStr('house', 'houses') // false
 // compareStr('tomato', 'tomato') // true
 let compareStr = function(str1, str2) {
+  if (str1.length > 1 && str2.length > 1) {
+    return compareStr(str1.slice(0, str1.length-1), str2.slice(0, str2.length-1));
+  }
+  return str1 === str2;
 };
 
 // 16. Write a function that accepts a string and creates an array where each letter
@@ -138,16 +258,69 @@ let countKeysInObj = function(obj, key) {
 };
 
 // 23. Write a function that counts the number of times a value occurs in an object.
-// let obj = {'e':{'x':'y'},'t':{'r':{'e':'r'},'p':{'y':'r'}},'y':'e'};
+/*
+let obj = {
+  'e':{'x':'y'},
+  't':{
+    'r':{'e':'r'},
+    'p':{'y':'r'}
+    },
+  'y':'e'
+};
+*/
 // countValuesInObj(obj, 'r') // 2
 // countValuesInObj(obj, 'e') // 1
+
+var isObject = (val) => val === null ? false : (!Array.isArray(val) && typeof val == 'object');
+
+//solved w/o recursion:
 let countValuesInObj = function(obj, value) {
+  // console.log('start')
+  // console.log(obj);
+  let count = 0;
+
+
+  for (var key in obj) {
+    if (isObject(obj[key])) {
+     count += countValuesInObj(obj[key], value);
+    } else if (obj[key] === value) {
+      count++;
+    }
+  }
+  return count;
 };
+
+/*
+*/
+// console.log(result);
 
 // 24. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
 let replaceKeysInObj = function(obj, oldKey, newKey) {
+  for (var key in obj) {
+    if (isObject(obj[key])) {
+      replaceKeysInObj(obj[key], oldKey, newKey);
+    }
+    if (obj[oldKey]) {
+      obj[newKey] = obj[oldKey];
+      delete obj[oldKey];
+    }
+  }
+  return obj;
 };
+
+let input1 = {
+  'e':{'x':'y'},
+  't':{
+    'r':{'e':'r'},
+    'p':{'y':'r'}
+    },
+  'y':'e'
+};
+
+console.log(input1);
+let result1 = replaceKeysInObj(input1, 'y', 'dog');
+console.log(result1);
 
 // 25. Get the first n Fibonacci numbers. In the Fibonacci sequence, each subsequent
 // number is the sum of the previous two.
